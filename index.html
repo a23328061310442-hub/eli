@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurante Eli</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin:0; padding:0; background:#fff8f0;
+}
+header {
+  background: linear-gradient(90deg, #56ab2f, #a8e063);
+  color:white; text-align:center; padding:30px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+header h1 { margin:0; font-size:2.5em; }
+header p { margin:5px 0 0; font-size:1.1em; }
+
+.tabs {
+  display:flex; justify-content:center; background:#ff6347; flex-wrap: wrap;
+}
+.tab {
+  padding:14px 20px; cursor:pointer; color:white; font-weight:bold; transition:0.3s;
+}
+.tab.active { background:#ff8566; }
+
+.menu {
+  display:none;
+  padding:20px;
+  grid-gap:20px;
+  max-width:1100px;
+  margin:auto;
+}
+.menu.active {
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.menu-item {
+  background:linear-gradient(135deg, #fdfbfb, #ebedee);
+  padding:15px; border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  position:relative; transition:transform 0.3s, box-shadow 0.3s;
+}
+.menu-item:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,0.2); }
+
+.menu-item h3 { margin:0; font-size:1.2em; }
+.menu-item p { margin:5px 0; color:#555; }
+.menu-item .price {
+  font-weight:bold; color:#e67e22; margin-top:5px;
+  display:block; font-size:1.1em;
+}
+
+.add-cart {
+  position:absolute; right:15px; bottom:15px;
+  background:#27ae60; color:white; border:none;
+  border-radius:12px; padding:5px 12px; cursor:pointer;
+  transition:0.3s;
+}
+.add-cart:hover { background:#2ecc71; }
+
+.cart {
+  position:fixed; top:100px; right:20px; width:300px;
+  max-height:80vh; overflow-y:auto; background-color:#fff;
+  border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.3); padding:20px; z-index:100;
+}
+.cart h2 { margin-top:0; font-size:1.5em; color:#56ab2f; text-align:center; }
+.cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px; }
+.cart-item button { background-color:#56ab2f; border:none; color:white; border-radius:50%; width:25px; height:25px; cursor:pointer; font-weight:bold; line-height:25px; transition:0.3s; }
+.cart-item button:hover { background-color:#7ed957; }
+.total { font-weight:bold; margin-top:15px; text-align:right; font-size:1.1em; }
+.empty-cart, .pay-btn {
+  margin-top:15px; width:100%; padding:10px; border:none; border-radius:20px; cursor:pointer; font-size:1em; transition:0.3s;
+}
+.empty-cart { background-color:#56ab2f; color:white; }
+.empty-cart:hover { background-color:#7ed957; }
+.pay-btn { background:#e67e22; color:white; }
+.pay-btn:hover { background:#f39c12; }
+
+@media(max-width:600px){ 
+  .menu{ padding:0 10px; }
+  .cart{ width:90%; right:5%; top:90px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Restaurante Eli 🍽️</h1>
+<p>Elige tus platillos, bebidas, postres o toppings favoritos</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showMenu('comidas')">🍲 Comidas</div>
+  <div class="tab" onclick="showMenu('postres')">🍰 Postres</div>
+  <div class="tab" onclick="showMenu('bebidas')">🥤 Bebidas</div>
+  <div class="tab" onclick="showMenu('toppings')">✨ Toppings</div>
+</div>
+
+<!-- ================= COMIDAS ================= -->
+<div id="comidas" class="menu active">
+  <div class="menu-item" data-name="🍔 Hamburguesa" data-price="120"><h3>🍔 Hamburguesa</h3><p>Con queso y papas fritas.</p><span class="price">$120 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍕 Pizza" data-price="180"><h3>🍕 Pizza</h3><p>Con pepperoni y queso extra.</p><span class="price">$180 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🌮 Tacos" data-price="90"><h3>🌮 Tacos</h3><p>De pastor con piña.</p><span class="price">$90 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥗 Ensalada César" data-price="80"><h3>🥗 Ensalada César</h3><p>Con pollo y aderezo casero.</p><span class="price">$80 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍣 Sushi" data-price="150"><h3>🍣 Sushi</h3><p>Rollo variado.</p><span class="price">$150 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍝 Spaghetti" data-price="130"><h3>🍝 Spaghetti</h3><p>A la boloñesa.</p><span class="price">$130 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍗 Pollo" data-price="140"><h3>🍗 Pollo al Horno</h3><p>Con papas y hierbas.</p><span class="price">$140 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥪 Sándwich" data-price="110"><h3>🥪 Sándwich Club</h3><p>Triple capa con jamón.</p><span class="price">$110 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥩 Filete" data-price="220"><h3>🥩 Filete</h3><p>A la parrilla con champiñones.</p><span class="price">$220 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍛 Curry" data-price="100"><h3>🍛 Curry</h3><p>De vegetales frescos.</p><span class="price">$100 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥟 Dumplings" data-price="95"><h3>🥟 Dumplings</h3><p>Rellenos de cerdo.</p><span class="price">$95 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍤 Camarones" data-price="160"><h3>🍤 Camarones</h3><p>Al ajillo.</p><span class="price">$160 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥘 Paella" data-price="200"><h3>🥘 Paella</h3><p>Con mariscos y pollo.</p><span class="price">$200 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🌯 Burrito" data-price="95"><h3>🌯 Burrito</h3><p>Mexicano clásico.</p><span class="price">$95 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍲 Sopa" data-price="70"><h3>🍲 Sopa</h3><p>De verduras frescas.</p><span class="price">$70 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+</div>
+
+<!-- ================= POSTRES ================= -->
+<div id="postres" class="menu">
+  <div class="menu-item" data-name="🍦 Helado" data-price="60"><h3>🍦 Helado</h3><p>De vainilla.</p><span class="price">$60 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍰 Pastel de Chocolate" data-price="80"><h3>🍰 Pastel de Chocolate</h3><p>Suave y cremoso.</p><span class="price">$80 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍮 Flan" data-price="50"><h3>🍮 Flan</h3><p>Con caramelo.</p><span class="price">$50 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥧 Pay de Limón" data-price="75"><h3>🥧 Pay de Limón</h3><p>Con galleta crujiente.</p><span class="price">$75 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍩 Dona" data-price="40"><h3>🍩 Dona</h3><p>Glaseada.</p><span class="price">$40 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍪 Galletas" data-price="45"><h3>🍪 Galletas</h3><p>Con chispas de chocolate.</p><span class="price">$45 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🧁 Cupcake" data-price="55"><h3>🧁 Cupcake</h3><p>De fresa.</p><span class="price">$55 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍫 Brownie" data-price="65"><h3>🍫 Brownie</h3><p>De chocolate intenso.</p><span class="price">$65 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥮 Pastel de Queso" data-price="90"><h3>🥮 Pastel de Queso</h3><p>Con frutos rojos.</p><span class="price">$90 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍧 Raspado" data-price="35"><h3>🍧 Raspado</h3><p>De sabores.</p><span class="price">$35 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥭 Mousse de Mango" data-price="85"><h3>🥭 Mousse de Mango</h3><p>Refrescante.</p><span class="price">$85 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍓 Tarta de Fresa" data-price="95"><h3>🍓 Tarta de Fresa</h3><p>Con crema pastelera.</p><span class="price">$95 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥜 Pay de Nuez" data-price="100"><h3>🥜 Pay de Nuez</h3><p>Tradicional.</p><span class="price">$100 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍎 Strudel de Manzana" data-price="110"><h3>🍎 Strudel de Manzana</h3><p>Con canela.</p><span class="price">$110 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍍 Gelatina de Piña" data-price="30"><h3>🍍 Gelatina de Piña</h3><p>Ligera y fresca.</p><span class="price">$30 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+</div>
+
+<!-- ================= BEBIDAS ================= -->
+<div id="bebidas" class="menu">
+  <div class="menu-item" data-name="🥤 Refresco" data-price="40"><h3>🥤 Refresco</h3><p>Sabor cola.</p><span class="price">$40 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🧃 Jugo Naranja" data-price="50"><h3>🧃 Jugo Naranja</h3><p>Natural recién exprimido.</p><span class="price">$50 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍵 Té Verde" data-price="45"><h3>🍵 Té Verde</h3><p>Caliente.</p><span class="price">$45 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="☕ Café Americano" data-price="35"><h3>☕ Café Americano</h3><p>Recién hecho.</p><span class="price">$35 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥛 Leche" data-price="30"><h3>🥛 Leche</h3><p>Fría o caliente.</p><span class="price">$30 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍹 Piña Colada" data-price="80"><h3>🍹 Piña Colada</h3><p>Sin alcohol.</p><span class="price">$80 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍷 Vino Tinto" data-price="120"><h3>🍷 Vino Tinto</h3><p>De la casa.</p><span class="price">$120 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍺 Cerveza" data-price="60"><h3>🍺 Cerveza</h3><p>Artesanal.</p><span class="price">$60 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥥 Agua de Coco" data-price="55"><h3>🥥 Agua de Coco</h3><p>Natural.</p><span class="price">$55 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍓 Licuado Fresa" data-price="70"><h3>🍓 Licuado Fresa</h3><p>Con leche.</p><span class="price">$70 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍋 Limonada" data-price="40"><h3>🍋 Limonada</h3><p>Fresca.</p><span class="price">$40 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🧉 Mate" data-price="65"><h3>🧉 Mate</h3><p>Tradicional.</p><span class="price">$65 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍵 Matcha" data-price="75"><h3>🍵 Matcha Latte</h3><p>Con leche.</p><span class="price">$75 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥤 Malteada Chocolate" data-price="85"><h3>🥤 Malteada Chocolate</h3><p>Con helado.</p><span class="price">$85 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥤 Smoothie Tropical" data-price="95"><h3>🥤 Smoothie Tropical</h3><p>Con mango y piña.</p><span class="price">$95 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+</div>
+
+<!-- ================= TOPPINGS ================= -->
+<div id="toppings" class="menu">
+  <div class="menu-item" data-name="🧀 Extra Queso" data-price="20"><h3>🧀 Extra Queso</h3><p>Para tus comidas.</p><span class="price">$20 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥓 Tocino" data-price="25"><h3>🥓 Tocino</h3><p>Crocante.</p><span class="price">$25 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🌶️ Salsa Extra" data-price="15"><h3>🌶️ Salsa Extra</h3><p>Picante.</p><span class="price">$15 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🥑 Guacamole" data-price="30"><h3>🥑 Guacamole</h3><p>Cremoso y fresco.</p><span class="price">$30 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+  <div class="menu-item" data-name="🍯 Miel Extra" data-price="15"><h3>🍯 Miel Extra</h3><p>Ideal para postres.</p><span class="price">$15 MXN</span><button class="add-cart" onclick="addToCart(this)">Agregar</button></div>
+</div>
+
+<!-- ================= CARRITO ================= -->
+<div class="cart" id="cart">
+  <h2>🛒 Tu Carrito</h2>
+  <div id="cart-items"></div>
+  <div class="total" id="total">Total: $0 MXN</div>
+  <button class="empty-cart" onclick="emptyCart()">Vaciar Carrito</button>
+  <button class="pay-btn" onclick="pay()">Pagar</button>
+</div>
+
+<script>
+let cart = [];
+
+function showMenu(id){
+  document.querySelectorAll('.menu').forEach(m=>m.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function addToCart(el){
+  let name = el.parentElement.getAttribute("data-name");
+  let price = parseFloat(el.parentElement.getAttribute("data-price"));
+  let item = cart.find(i=>i.name===name);
+  if(item){ item.quantity++; }
+  else{ cart.push({name, price, quantity:1}); }
+  renderCart();
+}
+
+function removeFromCart(name){
+  cart = cart.filter(i=>i.name!==name);
+  renderCart();
+}
+
+function renderCart(){
+  let div = document.getElementById("cart-items");
+  div.innerHTML = "";
+  let total = 0;
+  cart.forEach(i=>{
+    total += i.price * i.quantity;
+    div.innerHTML += `<div class="cart-item">${i.quantity}x ${i.name} - $${i.price * i.quantity} <button onclick="removeFromCart('${i.name}')">✕</button></div>`;
+  });
+  document.getElementById("total").innerText = "Total: $" + total + " MXN";
+}
+
+function emptyCart(){ cart = []; renderCart(); }
+
+function pay(){
+  if(cart.length === 0){ alert("Tu carrito está vacío 🛒"); return; }
+  let ticket = "🧾 Ticket de compra:\n\n";
+  cart.forEach(i=>{ ticket += `${i.quantity}x ${i.name} - $${i.price * i.quantity} MXN\n`; });
+  let total = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+  ticket += "\nTOTAL: $" + total + " MXN\n\n¡Gracias por tu compra!";
+  alert(ticket);
+  emptyCart();
+}
+</script>
+
+</body>
+</html>
